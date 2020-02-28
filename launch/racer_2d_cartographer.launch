@@ -15,22 +15,21 @@
 <launch>
  <param name="/use_sim_time" value="true" />
  <param name="robot_description" textfile="$(find cartographer_ros)/urdf/os1_sensor.urdf" />
-<!--
+
 
  <node pkg="tf" type="tf_remap" name="tf_remapper" output="screen">
   <rosparam param="mappings">
     [{old: /os1_imu , new: os1_imu}]
   </rosparam>
-</node> -->
-<node pkg="tf" type="static_transform_publisher" name="world_to_map_broadcaster" args="0 0 0 0 0 0 world map 50" />
-<node pkg="tf" type="static_transform_publisher" name="base_to_laser_broadcaster" args="0 0 0 0 0 0 base_link laser 50" />
+</node> 
 
-  <node name="cartographer_offline_node" pkg="cartographer_ros"
-      type="cartographer_offline_node" args="
+<!-- <node pkg="tf" type="static_transform_publisher" name="world_to_map_broadcaster" args="0 0 0 0 0 0 /os1_lidar os1_lidar 50" />
+<node pkg="tf" type="static_transform_publisher" name="base_to_laser_broadcaster" args="0 0 0 0 0 0 /os1_imu os1_imu 50" /> -->
+
+  <node name="cartographer_node" pkg="cartographer_ros"
+      type="cartographer_node" args="
           -configuration_directory $(find cartographer_ros)/configuration_files
-          -configuration_basenames my_robot.lua
-          -urdf_filenames $(find cartographer_ros)/urdf/os1_sensor.urdf
-          -bag_filenames $(arg bag_filenames)"
+          -configuration_basename my_robot.lua"
       output="screen">
     <!--<remap from="scan" to="/os1_cloud_node/points" />-->
     <remap from="imu" to="/os1_cloud_node/imu" /> <!-- IMU Comp filter output -->
